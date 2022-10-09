@@ -1,5 +1,5 @@
 <?php
-require_once 'conexao.php'; ?>
+include_once 'conexao.php'; ?>
 
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -14,32 +14,66 @@ require_once 'conexao.php'; ?>
   </head>
 
   <body>
-    <a href="index.php">Listar</a>
-    <a href="cadastrar.php">cadastrar</a>
-    <h1>Listar Clientes</h1>
+    <div class="container">
 
-    <?php
+      <div class="row">
 
-  $consulta = "SELECT id, nome, email  FROM users ";
-  $result_usuarios = $conn->prepare($consulta);
-  $result_usuarios->execute();
+        <div class="col-md-12">
 
-  if (($result_usuarios) and ($result_usuarios->rowCount() != 0)) {
+          <div class="card-header">
+            <h4>Listar Usuários
+            </h4>
+            <div class="txt-right"><a href="cadastrar.php" class="btn btn-danger ">Novo
+                Usuário</a></div>
 
-    while ($row_usuario = $result_usuarios->fetch(PDO::FETCH_ASSOC)) {
-      // var_dump($row_usuario);
-      extract($row_usuario);
-      echo "ID: $id <br>";
-      echo "Nome: $nome <br>";
-      echo "E-mail: $email";
-      echo "<hr>";
-    }
-  } else {
-    echo "<p style='color: #f00;'>Erro: Usuário não cadastrado!</p>";
-  }
+            <div class="card-body">
+              <table class="table table-striped table-dark">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Nome</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Ações</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <?php
+                //Faz uma consulta no banco de dados e depois pega todo o resultado e monta na tela para o usuário listando o conteúdo
+                $consulta = "SELECT * FROM users ";
+                $result_usuarios = $conn->prepare($consulta);
+                $result_usuarios->execute();
 
-  ?>
+                if ($result_usuarios->rowCount() > 0) {
 
+                  foreach ($result_usuarios as $usuario) {
+
+                ?>
+                  <tr>
+
+                    <td><?= $usuario['id']; ?></td>
+                    <td><?= $usuario['nome']; ?></td>
+                    <td><?= $usuario['email']; ?></td>
+                    <td><a class="btn btn-success btn-sm" href="Edit.php">Editar</a></td>
+                    <td><a class="btn btn-danger btn-sm" href="delete.php">Excluir</a></td>
+                  </tr>
+
+                  <?php
+                  }
+                }
+
+                ?>
+
+                </tbody>
+              </table>
+
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
 
 
   </body>
