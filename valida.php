@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once 'conexao.php';
 //recebe os dados do formulário e transforma em um array
 
@@ -15,10 +16,10 @@ if (!empty($_POST['cadUsuario'])) {
   if (in_array("", $dados)) {
     $empty_input = true;
     echo
-    "<p style='color: #f00;'>Erro: Necessário preencher todos campos!</p>";
+    "<p style='color: #f00;'>É Necessário preencher todos campos!</p>";
   } elseif (!filter_var($dados['email'], FILTER_VALIDATE_EMAIL)) {
     $empty_input = true;
-    echo "<p style='color: #f00;'>Erro: Necessário preencher com e-mail válido!</p>";
+    echo "<p style='color: #f00;'>É Necessário preencher com e-mail válido!</p>";
   }
   /*aqui faço a chamada da variável invertendo a lógica com o ponto de exclamação dizendo que ser for diferente da variável $empty_input que até aqui ela é verdadeira,
    ou seja vazio, mas se ao chegar até aqui significa que não está vazio e então inicia o processo de cadastro no banco.*/
@@ -30,12 +31,14 @@ if (!empty($_POST['cadUsuario'])) {
     $stmt->execute();
     /* aqui utilizo uma condição, que se a variável $stmt que contem as informações acima, e se ela contem dados que é o contador rowCount, chama a função de imprimir a mensagem na tela dizendo que foi cadastrado com sucesso!*/
     if ($stmt->rowCount()) {
-      echo  "<p style='color: green;'>Usuário cadastrado com sucesso!</p>";
+      $_SESSION['mensagem'] = "Cadastrado com sucesso!";
+      header('Location: index.php?');
       //aqui utilizo a função de matar ou destruir os dados caso não seja possível cadastrar no banco com a função unset e passando a variável que com tem os dados $dados e não sendo possível cadastrar utilizo o else para
       //exibir a mensagem dizendo que não foi possível cadastrar usuário.
       unset($dados);
     } else {
-      echo "<p style='color: #f00;'>Erro: Usuário não cadastrado!</p>";
+      $_SESSION['mensagem'] = "Erro ao Cadastrar usuário!";
+      header('Location: index.php?');
     }
   }
 }

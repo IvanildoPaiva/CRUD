@@ -22,10 +22,10 @@
       </div>
       <form name="cad-usuario" method="POST" action="valida.php">
         <label for="nome">Nome:</label>
-        <input type="text" name="nome" id="nome" placeholder="Nome completo" value="<?php if (isset($dados['nome'])) {
+        <input type="text" name="nome" id="nome" placeholder="Nome completo" aurofocus value="<?php if (isset($dados['nome'])) {
 
-                                                                                    echo $dados['nome'];
-                                                                                  } ?>"><br /><br />
+                                                                                              echo $dados['nome'];
+                                                                                            } ?>"><br /><br />
 
         <label for="email">E-mail:</label>
         <input type="text" name="email" id="email" placeholder="Digite seu E-mail" value="<?php if (isset($dados['email'])) {
