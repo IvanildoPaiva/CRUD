@@ -48,8 +48,13 @@ include_once("conexao.php");
           <td class="text-center"><?php echo $row['email']; ?></td>
           <td class="text-center"><a class="btn btn-success btn-sm " href="edit.php?id=<?= $row['id']; ?>"><i
                 class="bi bi-pencil"></i> Edit</a>
-            <a class="btn btn-danger btn-sm " href=""><i class="bi bi-trash3"></i>
-              Excluir</a>
+            <!-- Início do formulário onde o botão delete precisa estar dentro para que haja o submit e 
+    a página valida.php irá processar devido o nome do botão-->
+            <form class="d-inline" method="POST" action="valida.php">
+              <button type="submit" name="delete" value="<?= $row['id']; ?>" class="btn btn-danger btn-sm"><i
+                  class="bi bi-trash3"></i>
+                Excluir</button>
+            </form>
           </td>
         </tr>
 
