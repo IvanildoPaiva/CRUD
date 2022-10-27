@@ -1,95 +1,74 @@
 <?php
-//iniciando a sessão
 session_start();
-/*verificando se existe uma sessão ativa chamada mensagem, essa sessão foi criada no arquivo valida.php, quando é realizado a inserção dos dados no banco
-é redirecionado para essa página index.php e se existe a sessão ela é exibida, com mensagem de sucesso ou de erro
-*/
-if (isset($_SESSION['mensagem'])) {
-  echo $_SESSION['mensagem'];
-  //depois utilizei a session destroy para matar a sessão, pois ao atualizar essa mensagem deve desaparecer..
-  session_destroy();
-}
-include_once 'conexao.php';
-
+include_once("conexao.php");
 ?>
 
 <!DOCTYPE html>
 <html lang="pt-br">
 
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Listar</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-</head>
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crud Precedural</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
-<body>
 
-  <div class="container">
+    <!-- Icons -->
 
-    <div class="row">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
 
-      <div class="col-md-12">
+  </head>
+  <a class="btn btn-primary m-3" href="cadastrar.php">Novo Cadastro</a>
+  <div class="container mt-5">
+    <?php include_once("mensagem.php"); ?>
 
-        <div class="card-header">
-          <h4>Listar Usuários
-          </h4>
-          <div class="txt-right"><a href="cadastrar.php" class="btn btn-danger ">Novo
-              Usuário</a></div>
+    <table class=" table table-bordered  table-striped table-sm">
+      <thead class="table-dark">
+        <tr>
+          <th class="text-center" scope="row">#</th>
+          <th class="text-center" scope=" col">Nome</th>
+          <th class="text-center" scope="col">Email</th>
+          <th class="text-center" scope="col">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <?php
+      $sql = "SELECT * FROM users";
+      $sql_result = mysqli_query($conn, $sql);
 
-          <div class="card-body">
-            <table class="table table-striped table-dark">
-              <thead>
-                <tr>
-                  <th scope="col">#</th>
-                  <th scope="col">Nome</th>
-                  <th scope="col">Email</th>
-                  <th scope="col">Ações</th>
-                </tr>
-              </thead>
-              <tbody>
-                <?php
-                //Faz uma consulta no banco de dados e depois pega todo o resultado e monta na tela para o usuário listando o conteúdo
-                $consulta = "SELECT * FROM users ";
-                $result_usuarios = $conn->prepare($consulta);
-                $result_usuarios->execute();
+      if (mysqli_num_rows($sql_result) > 0) {
 
-                if ($result_usuarios->rowCount() > 0) {
+        foreach ($sql_result as $row) {
+      ?>
+        <tr>
+          <td class="text-center"><?php echo $row['id']; ?></td>
+          <td class="text-center"><?php echo $row['nome']; ?></td>
+          <td class="text-center"><?php echo $row['email']; ?></td>
+          <td class="text-center"><a class="btn btn-success btn-sm " href="edit.php?id=<?= $row['id']; ?>"><i
+                class="bi bi-pencil"></i> Edit</a>
+            <a class="btn btn-danger btn-sm " href=""><i class="bi bi-trash3"></i>
+              Excluir</a>
+          </td>
+        </tr>
 
-                  foreach ($result_usuarios as $usuario) {
+        <?php
 
-                ?>
-                    <tr>
-
-                      <td><?= $usuario['id']; ?></td>
-                      <td><?= $usuario['nome']; ?></td>
-                      <td><?= $usuario['email']; ?></td>
-                      <td><a class="btn btn-success btn-sm" href="edit.php?id=<?php echo $usuario['id']; ?>">Editar</a>
-                      </td>
-                      <td><a class="btn btn-danger btn-sm" href="delete.php">Excluir</a></td>
-                    </tr>
-
-                <?php
-                  }
-                } else {
-                  $_SESSION['mensagem'] = "Não há usuários cadastrado!";
-                }
-                ?>
-
-              </tbody>
-            </table>
-
-          </div>
-        </div>
-
-      </div>
-
-    </div>
+        }
+      } else {
+        echo "<h5>Não há registro no banco de dados!</h5>";
+      }
+      ?>
+      </tbody>
+    </table>
 
   </div>
 
-
-</body>
+  <body>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
+    </script>
+  </body>
 
 </html>

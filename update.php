@@ -1,11 +1,22 @@
 <?php
 session_start();
-require_once 'conexao.php';
-$id = filter_input(INPUT_POST, FILTER_VALIDATE_INT);
-$nome = filter_input(INPUT_POST, FILTER_SANITIZE_SPECIAL_CHARS);
-$email = filter_input(INPUT_POST, FILTER_VALIDATE_EMAIL);
+include_once("conexao.php");
+// recebe os dados do formulário para realizar as atualizações no banco
 
-$atualizar = "UPDATE users SET nome = '$nome', email='$email', WHERE id = '$id'";
+if (isset($_POST['update'])) {
+  $user_id = $_POST['user_id'];
+  $nome = ($_POST['nome']);
+  $email = $_POST['email'];
+  $query = "UPDATE users SET  nome='$nome', email='$email' WHERE id='$user_id'";
+  $query_run = mysqli_query($conn, $query);
 
-$stmt = $conn->prepare($atualizar);
-$stmt->execute();
+  if ($query_run) {
+    $_SESSION['mensagem'] = "Usuário atualizado com sucesso!";
+    header('location:index.php');
+    exit(0);
+  } else {
+    $_SESSION['mensagem'] = "Erro ao atualizar usuário";
+    header('location:index.php');
+    exit(0);
+  }
+}
