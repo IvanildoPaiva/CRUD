@@ -1,13 +1,13 @@
 <?php
 session_start();
 include_once("conexao.php");
-// recebe os dados do formulário para realizar as atualizações no banco
 
-if (isset($_POST['delete'])) {
-  $user_id = $_POST['user_id'];
-  $nome = ($_POST['nome']);
-  $email = $_POST['email'];
-  $query = "DELETE users   nome='$nome', email='$email' WHERE id='$user_id'";
+// faz um verificação se existe o ID caso o usuário tente burlar
+if (!empty($_GET['id'])) {
+  $id = $_GET['id'];
+
+  $query = "UPDATE users SET ativo = 'N' WHERE id = '$id'";
+  //print $query;  exit();
   $query_run = mysqli_query($conn, $query);
 
   if ($query_run) {
